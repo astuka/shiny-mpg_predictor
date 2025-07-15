@@ -1,0 +1,151 @@
+---
+title: "Car MPG Predictor"
+subtitle: "An Interactive Shiny Application for Fuel Efficiency Prediction"
+author: "Jacob Robinson"
+date: "`r Sys.Date()`"
+output: 
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(plotly)
+library(DT)
+library(knitr)
+```
+
+## Slide 1: Introduction {.smaller}
+
+### Car MPG Predictor: Your Fuel Efficiency Calculator
+
+**What is it?**
+- An interactive web application built with R Shiny
+- Predicts car fuel efficiency (MPG) based on key characteristics
+- Uses machine learning to provide accurate estimates
+
+**Why build this?**
+- Help users understand factors affecting fuel efficiency
+- Demonstrate practical application of predictive modeling
+- Provide an intuitive interface for data exploration
+
+
+## Slide 2: How It Works {.smaller}
+
+### The Prediction Model
+
+The app uses a **multiple linear regression model** trained on the famous `mtcars` dataset:
+
+```{r model-demo, echo=FALSE}
+# Load the data
+data <- mtcars
+data$transmission <- data$am  # am: 0 = automatic, 1 = manual
+
+# Build the prediction model
+model <- lm(mpg ~ wt + cyl + am, data = data)
+
+# Show model summary
+summary(model)
+```
+
+**Key Features:**
+- **Weight**: Car weight in thousands of pounds
+- **Cylinders**: Number of engine cylinders (4, 6, or 8)
+- **Transmission**: Automatic (0) or Manual (1)
+
+
+## Slide 3: Interactive Features {.smaller}
+
+### User-Friendly Interface
+
+**Input Controls:**
+- Slider for car weight (1.5 - 5.5 thousand lbs)
+- Dropdown for cylinder selection
+- Radio buttons for transmission type
+
+**Real-time Results:**
+- Instant MPG prediction
+- 95% confidence intervals
+- Interactive visualization
+
+```{r demo-prediction, echo=FALSE}
+# Example prediction
+new_car <- data.frame(wt = 3.2, cyl = 6, am = 0)
+prediction <- predict(model, new_car, interval = "prediction")
+
+cat("Example Prediction:\n")
+cat("Weight: 3.2k lbs, 6 cylinders, Automatic\n")
+cat("Predicted MPG:", round(prediction[1], 1), "\n")
+cat("95% Confidence Interval:", round(prediction[2], 1), "-", round(prediction[3], 1), "MPG")
+```
+
+
+
+## Slide 4: Data Visualization {.smaller}
+
+### Interactive Plots and Data Exploration
+
+The app includes:
+
+**Scatter Plot:**
+- Weight vs MPG relationship
+- Color-coded by cylinder count
+- User's prediction highlighted
+
+**Data Table:**
+- Complete mtcars dataset
+- Sortable and searchable
+- Easy data exploration
+
+```{r data-viz, echo=FALSE, fig.height=4}
+# Create a sample visualization
+plot_ly(data = data, 
+        x = ~wt, 
+        y = ~mpg,
+        color = ~factor(cyl),
+        colors = c("red", "blue", "green"),
+        type = "scatter",
+        mode = "markers",
+        marker = list(size = 8)) %>%
+  layout(title = "Car Weight vs MPG by Cylinders",
+         xaxis = list(title = "Weight (1000 lbs)"),
+         yaxis = list(title = "Miles Per Gallon"))
+```
+
+
+
+## Slide 5: Benefits and Applications {.smaller}
+
+### Why Choose This App?
+
+**Educational Value:**
+- Learn about predictive modeling
+- Understand fuel efficiency factors
+- Interactive data science experience
+
+**Technical Excellence:**
+- Built with modern R Shiny framework
+- Responsive design with Bootstrap themes
+- Interactive plots with Plotly
+- Professional data tables with DT
+
+**Real-world Applications:**
+- Car purchasing decisions
+- Environmental impact assessment
+- Educational tool for statistics classes
+
+**Try it now!** The app is ready for deployment and can be easily shared via GitHub or RPubs.
+
+
+
+## Thank You! {.smaller}
+
+**Technologies Used:**
+- R Shiny
+- Plotly for interactive visualizations
+- DT for data tables
+- Bootstrap for responsive design
+
+*Built with ❤️ using R and Shiny* 
